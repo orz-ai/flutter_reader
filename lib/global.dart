@@ -3,16 +3,13 @@ import 'package:android_id/android_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:package_by_walle/package_by_walle.dart';
-import 'package:quiver/strings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'app/routes/app_pages.dart';
+import 'common/utils/local_util.dart';
 import 'common/utils/storage.dart';
-import 'common/utils/utils.dart';
 import 'common/values/storage.dart';
-import 'common/values/values.dart';
 
 /// 全局静态数据
 class Global {
@@ -67,12 +64,12 @@ class Global {
     }
 
     //渠道信息
-    if (Global.isIOS) {
-      channelId = '0';
-    } else {
-      Map<dynamic, dynamic>? info = await PackageByWalle.getPackingInfo;
-      channelId = info?['channelId'] ?? '1';
-    }
+    // if (Global.isIOS) {
+    //   channelId = '0';
+    // } else {
+    //   Map<dynamic, dynamic>? info = await PackageByWalle.getPackingInfo;
+    //   channelId = info?['channelId'] ?? '1';
+    // }
 
     // 包信息
     Global.packageInfo = await PackageInfo.fromPlatform();
@@ -81,18 +78,18 @@ class Global {
     await StorageUtil().init();
 
     //微信sdk初始化
-    await WeChatKit().registerWeChatApi(
-      weChatAppId,
-      universalLink: universalLink,
-    );
+    // await WeChatKit().registerWeChatApi(
+    //   weChatAppId,
+    //   universalLink: universalLink,
+    // );
 
     //阿里云推送初始化
-    AliPushKit().initAliPush();
+    // AliPushKit().initAliPush();
 
     // 读取设备第一次打开
     isFirstOpen = StorageUtil().getBool(storageDeviceFirstOpenKey);
     var _token = StorageUtil().getJSON(storageTokenKey);
-    if (!isBlank(_token)) {
+    if (_token != null) {
       isOfflineLogin = false;
     }
 
@@ -104,7 +101,7 @@ class Global {
     }
 
     var _locale = LocaleUtil.getAppLocale();
-    if (isBlank(_locale)) {
+    if (_locale != null) {
       LocaleUtil.saveAppLocale(const Locale('zh', 'CN'));
     }
   }
@@ -117,7 +114,7 @@ class Global {
   // 保存token
   static saveUserToken(String token) async {
     StorageUtil().putJSON(storageTokenKey, token);
-    isOfflineLogin = isBlank(token);
+    isOfflineLogin = token.isEmpty;
   }
 
   static String getUserToken() {
@@ -165,14 +162,14 @@ class Global {
   }
 
   // 获取设备aliPushDeviceId
-  static Future<String> getAliPushDeviceId() async {
-    String? aliPushDeviceId = StorageUtil().getJSON(aliPushDeviceIdKey);
-    if (aliPushDeviceId == null || aliPushDeviceId.isEmpty) {
-      aliPushDeviceId = await AliPushKit().getAliPushDeviceId();
-      saveAliPushDeviceId(aliPushDeviceId ?? '');
-    }
-    return aliPushDeviceId ?? '';
-  }
+  // static Future<String> getAliPushDeviceId() async {
+  //   String? aliPushDeviceId = StorageUtil().getJSON(aliPushDeviceIdKey);
+  //   if (aliPushDeviceId == null || aliPushDeviceId.isEmpty) {
+  //     aliPushDeviceId = await AliPushKit().getAliPushDeviceId();
+  //     saveAliPushDeviceId(aliPushDeviceId ?? '');
+  //   }
+  //   return aliPushDeviceId ?? '';
+  // }
 
   ///用户退出
   static void logout() {

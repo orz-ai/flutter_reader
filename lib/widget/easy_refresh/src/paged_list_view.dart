@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../loading_widget.dart';
 import '/app/base/model/base_page_list_resp.dart';
-import '/widget/widget.dart';
+import 'empty_result_widget.dart';
 
 typedef OnRefreshCallback = Future<void> Function();
 

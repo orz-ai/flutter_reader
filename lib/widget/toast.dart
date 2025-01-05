@@ -1,4 +1,6 @@
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 Future<void> toastInfo({
   required String msg,
   Duration? duration,

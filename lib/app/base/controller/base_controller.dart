@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../widget/loading_dialog.dart';
 import '/http/http_error.dart';
 import '/http/net_work.dart';
 import '../base_model.dart';

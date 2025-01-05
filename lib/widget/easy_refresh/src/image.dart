@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:quiver/strings.dart';
 
 ///图片加载工具类
 Widget loadImage(
@@ -20,7 +19,7 @@ Widget loadImage(
     height: height ?? 64,
     placeholder: placeholder,
   );
-  if (isBlank(url)) {
+  if (url.trim().isEmpty) {
     return placeHolder;
   }
   return CachedNetworkImage(

@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 
 import '../middleware/router_login.dart';
 import '../modules/login/index.dart';
-import '../modules/tab/index.dart';
-import '../modules/webview/index.dart';
 import '../modules/welcome/index.dart';
 part 'app_routes.dart';
 

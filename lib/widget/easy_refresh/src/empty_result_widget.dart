@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../buttons.dart';
+import 'image.dart';
+
 class EmptyResultWidget extends StatelessWidget {
   final String icon;
   final String text;
@@ -31,8 +34,8 @@ class EmptyResultWidget extends StatelessWidget {
           children: <Widget>[
             getIconPngWithSize(
               icon,
-              width: iconWidth?.w,
-              height: iconHeight?.h,
+              width: iconWidth!.w,
+              height: iconHeight!.h,
               fit: BoxFit.contain,
             ),
             SizedBox(

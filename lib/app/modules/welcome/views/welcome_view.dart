@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../routes/app_pages.dart';
 import '../index.dart';
 
 class WelcomePage extends GetView<WelcomeController> {
@@ -9,22 +10,32 @@ class WelcomePage extends GetView<WelcomeController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFFF584F),
       child: Stack(
         children: [
           Center(
-            child: _buildImage(),
+            child: ListView(
+              children: [
+                // button
+                Container(
+                  margin: EdgeInsets.only(top: 100.h),
+                  child: ElevatedButton(
+                    child: Text('跳转到首页'),
+                    onPressed: () => Get.toNamed(Routes.tab), // 跳转到首页
+                  ),
+                ),
+                // button
+                Container(
+                  margin: EdgeInsets.only(top: 100.h),
+                  child: ElevatedButton(
+                    child: Text('跳转到登录页'),
+                    onPressed: () => Get.toNamed(Routes.login("")), // 跳转到登录页
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildImage() {
-    return Icon(
-      Icons.settings_applications_outlined,
-      size: 48.w,
-      color: Colors.white54,
     );
   }
 }
