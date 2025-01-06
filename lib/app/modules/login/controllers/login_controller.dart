@@ -31,6 +31,6 @@ class LoginController extends BaseController<LoginModel> {
 
   ///跳转到主界面
   void _goToHome() {
-    Get.offAllNamed(Routes.tab);
+    Get.offAllNamed(Routes.home);
   }
 }

@@ -20,7 +20,7 @@ class WelcomePage extends GetView<WelcomeController> {
                   margin: EdgeInsets.only(top: 100.h),
                   child: ElevatedButton(
                     child: Text('跳转到首页'),
-                    onPressed: () => Get.toNamed(Routes.tab), // 跳转到首页
+                    onPressed: () => Get.toNamed(Routes.home), // 跳转到首页
                   ),
                 ),
                 // button

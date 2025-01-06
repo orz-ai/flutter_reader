@@ -24,7 +24,7 @@ class RouteLoginMiddleware extends GetMiddleware {
         return null;
       }
     }
-    return const RouteSettings(name: Routes.tab);
+    return const RouteSettings(name: Routes.home);
   }
 
   _showRegisterDialog() {
