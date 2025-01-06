@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../widget/second_tap_exit_app.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../home/views/home_view.dart';
 import '../../personal/views/personal_view.dart';
-import '/app/modules/home/index.dart';
 import '../index.dart';
 
 class TabHomePage extends StatefulWidget {
@@ -14,8 +15,19 @@ class TabHomePage extends StatefulWidget {
 }
 
 class TabHomePageState extends State<TabHomePage> {
+  RefreshController _refreshController1 = RefreshController();
+  RefreshController _refreshController2 = RefreshController();
+  int _tabIndex = 0;
+
   @override
   void initState() {
+    _refreshController1.headerMode?.addListener(() {
+      setState(() {});
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshController1.position?.jumpTo(0);
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -32,8 +44,6 @@ class TabHomePageState extends State<TabHomePage> {
       physics: const NeverScrollableScrollPhysics(),
       children: const <Widget>[
         HomePage(),
-        // GlobalPurchasingPage(),
-        // ClassifyPage(),
         PersonalPage(),
       ],
       controller: controller.pageController,
@@ -75,28 +85,6 @@ class TabHomePageState extends State<TabHomePage> {
       ),
       BottomNavigationBarItem(
         icon: const Icon(
-          Icons.shelves,
-          color: Colors.grey,
-        ),
-        activeIcon: const Icon(
-          Icons.shelves,
-          color: Colors.blueAccent,
-        ),
-        label: '书架'.tr,
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(
-          Icons.headphones_outlined,
-          color: Colors.black87,
-        ),
-        activeIcon: const Icon(
-          Icons.headphones,
-          color: Colors.blueAccent,
-        ),
-        label: '有声书'.tr,
-      ),
-      BottomNavigationBarItem(
-        icon: const Icon(
           Icons.person_outline,
           color: Colors.grey,
         ),
@@ -111,11 +99,166 @@ class TabHomePageState extends State<TabHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SecondTapExitAppWidget(
+    return RefreshConfiguration(
+      enableScrollWhenTwoLevel: true,
+      maxOverScrollExtent: 120,
       child: Scaffold(
-        body: _buildPageView(),
-        bottomNavigationBar: _buildBottomNavigationBar(),
+        body: Stack(
+          children: [
+            Offstage(
+              offstage: _tabIndex != 0,
+              child: LayoutBuilder(
+                builder: (_, c) {
+                  return SmartRefresher(
+                    header: TwoLevelHeader(
+                      textStyle: const TextStyle(color: Colors.black87),
+                      displayAlignment: TwoLevelDisplayAlignment.fromTop,
+                      twoLevelWidget: TwoLevelWidget(),
+                    ),
+                    controller: _refreshController1,
+                    enableTwoLevel: true,
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    onLoading: () async {
+                      await Future.delayed(Duration(milliseconds: 1000));
+                      _refreshController1.loadComplete();
+                    },
+                    onRefresh: () async {
+                      await Future.delayed(Duration(milliseconds: 1000));
+                      _refreshController1.refreshCompleted();
+                    },
+                    child: CustomScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: c.maxHeight,
+                            child: Scaffold(
+                              appBar: AppBar(
+                                backgroundColor: Colors.white,
+                                elevation: 0, // 去除阴影
+                                title: Obx(() {
+                                  return GestureDetector(
+                                    onTap: () => controller.openSearchPage(context),
+                                    child: AnimatedSwitcher(
+                                      duration: const Duration(milliseconds: 100),
+                                      child: Container(
+                                        height: 30.h,
+                                        key: ValueKey(controller.searchPlaceholder.value),
+                                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(20.r),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.search, color: Colors.grey, size: 16,),
+                                            SizedBox(width: 5.w),
+                                            Expanded(
+                                              child: Text(
+                                                controller.searchPlaceholder.value,
+                                                style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                              body: _buildPageView(),
+                              bottomNavigationBar: !_refreshController1.isTwoLevel ? _buildBottomNavigationBar() : null,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Offstage(
+              offstage: _tabIndex != 1,
+              child: SmartRefresher(
+                header: const ClassicHeader(),
+                controller: _refreshController2,
+                enableTwoLevel: true,
+                onRefresh: () async {
+                  await Future.delayed(const Duration(milliseconds: 2000));
+                  _refreshController2.refreshCompleted();
+                },
+                onTwoLevel: (bool isOpen) {
+                  print(isOpen);
+                  if (isOpen) {
+                    _refreshController2.position?.hold(() {});
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (c) => Scaffold(
+                                  appBar: AppBar(
+                                    title: Text("二楼"),
+                                  ),
+                                  body: Text("二楼刷新"),
+                                )))
+                        .whenComplete(() {
+                      _refreshController2.twoLevelComplete(duration: const Duration(microseconds: 1));
+                    });
+                  }
+                },
+                child: CustomScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: Container(
+                        color: Colors.red,
+                        height: 680.0,
+                        child: MaterialButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("点击这里返回上一页!"),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// 搜索页面
+class SearchPage extends StatelessWidget {
+  const SearchPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('搜索', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: Center(
+        child: Text(
+          '这里是搜索页面',
+          style: TextStyle(fontSize: 18.sp, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class TwoLevelWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text("二楼"),
     );
   }
 }

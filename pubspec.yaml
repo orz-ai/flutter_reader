@@ -28,6 +28,7 @@ dependencies:
   photo_view: ^0.14.0
   image_cropper: ^7.0.5
   android_id: ^0.0.7
+  pull_to_refresh: ^2.0.0
   flutter:
     sdk: flutter
 
