@@ -85,6 +85,28 @@ class TabHomePageState extends State<TabHomePage> {
       ),
       BottomNavigationBarItem(
         icon: const Icon(
+          Icons.book_outlined,
+          color: Colors.grey,
+        ),
+        activeIcon: const Icon(
+          Icons.book,
+          color: Colors.blueAccent,
+        ),
+        label: '书架'.tr,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(
+          Icons.headphones_outlined,
+          color: Colors.grey,
+        ),
+        activeIcon: const Icon(
+          Icons.headphones,
+          color: Colors.blueAccent,
+        ),
+        label: '有声书'.tr,
+      ),
+      BottomNavigationBarItem(
+        icon: const Icon(
           Icons.person_outline,
           color: Colors.grey,
         ),
@@ -135,7 +157,7 @@ class TabHomePageState extends State<TabHomePage> {
                             height: c.maxHeight,
                             child: Scaffold(
                               appBar: AppBar(
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.grey[50],
                                 elevation: 0, // 去除阴影
                                 title: Obx(() {
                                   return GestureDetector(

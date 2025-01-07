@@ -47,4 +47,5 @@ flutter:
       fonts:
         - asset: assets/fonts/userIconfont.ttf
   assets:
-#    - assets/images/banner.png
+    - assets/images/books_cover/
+
