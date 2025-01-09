@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -70,18 +71,51 @@ class HomePage extends GetView<HomeController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('大家都在看', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-
-
-
+                  Text('大家都在看', style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
 
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
 
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 15.w),
+              width: Get.width,
+              height: 300.h,
+              child: GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 15.0, // 主轴间距
+                crossAxisSpacing: 8.0, // 交叉轴间距
+                children: [
+                  _buildBooksWidget("assets/images/books_cover/book1.png", 1),
+                  _buildBooksWidget("assets/images/books_cover/book2.png", 1),
+                  _buildBooksWidget("assets/images/books_cover/book3.png", 1),
+                  _buildBooksWidget("assets/images/books_cover/book4.png", 1),
+                  _buildBooksWidget("assets/images/books_cover/book1.png", 1),
+                  _buildBooksWidget("assets/images/books_cover/book4.png", 1)
+                ],
 
+              ),
+            ),
 
+            SizedBox(height: 20.h),
+
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              margin: EdgeInsets.symmetric(horizontal: 15.w),
+              height: 45.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: InkWell(
+                onTap: () {
+                  Get.toNamed(Routes.home);
+                },
+                child: Text('换一批', style: TextStyle(fontSize: 12.sp, color: Colors.grey[500])),
+              ),
+            )
           ],
         ),
       ),
@@ -134,13 +168,26 @@ class HomePage extends GetView<HomeController> {
   /// @param bookType 书籍类型 1:书籍 2:听书
   Widget _buildRecentBooksWidget(String cover, int bookType) {
     return Container(
+      alignment: Alignment.center,
       height: 100.h,
       width: 60.w,
       margin: EdgeInsets.only(right: 10.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        image: DecorationImage(image: AssetImage(cover), fit: BoxFit.scaleDown),
+        image: DecorationImage(image: AssetImage(cover), fit: BoxFit.fill),
+      ),
+    );
+  }
+
+  Widget _buildBooksWidget(String cover, int bookType) {
+    return Container(
+      alignment: Alignment.center,
+      height: 100.h,
+      width: 60.w,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        image: DecorationImage(image: AssetImage(cover), fit: BoxFit.fitHeight),
       ),
     );
   }
